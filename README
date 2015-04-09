@@ -1,0 +1,50 @@
+###########################
+#                         #
+#  Akshay Srivatsan       #
+#  Notes on Assignment 3  #
+#                         #
+###########################
+
+
+               tank   plant  pers/place 
+=============================================
+COMBINATION 1  .79    .82    .69
+COMBINATION 2  .91    .91    .77
+COMBINATION 3  .77    .86    .68
+COMBINATION 4  .75    .87    .63
+COMBINATION 5  .77    .91    .66  #2-adjacent-separate-LR
+COMBINATION 6  .81    .85    .72  #2-adjacent-separate-LR
+COMBINATION 7  .76    .90    .65
+
+
+Notes on COMBINATION 7 [EC]
+===========================
+
+Non-Default settings used:
+--------------------------
+
+- Linear weighting
+- Bag of words
+- Stemmed
+
+
+Description of method:
+----------------------
+
+For part 4 of this assignment, I decided to calculate the centroids based on an unsupervised K-Means clustering. I was curious as to whether an unsupervised model could do as well as the supervised one which we implemented, especially since it is much easier to come by unsupervised data for sense disambiguation.
+
+Specifically, instead of calculating the centroids as averages of the labeled data for each sense, I initialized two centroids at randomly chosen documents, and then ran K-Means until it converged. To get the actual semantic meanings associated with each centroid (e.g. living/factory) I labeled one centroid with the label from the document that was closest to it and then labeled the other centroid with the other label. If the data was completely unlabeled to begin with, this would correspond to labeling a single training example by hand.
+
+When I tweaked my default settings and ran the program enough times to find somewhat attractive optima, I found that my accuracy was very good compared to the supervised model (even better in some cases). This is a fantastic result as it implies that we can throw all of our hand-labeled labels in the trash and still be as accurate with an unsupervised method. K-Means was able to do almost as well with only one labeled sentence as the supervised model did with 3600.
+
+The disadvantages are clear though; K-Means is very slow, and non-deterministic. Since we have to relabel each sentence and recompute the centroids at each iteration, it takes a very long time for K-Means to converge on an optimum. Even after that, it's likely that we didn't actually find the global optimum, so we have to run it a few more times to be sure. In fact, when I was playing around with other settings like weighting and stemming, I realized that I couldn't ever be sure if I was improving the algorithm since it might give me different results each time, results which I found to vary by up to 16 percentage points between trials. That means that I might not have even found the best configuration at all.
+
+However, the results truly are inspiring in that we were able to do so well in spite of not even looking at the labels. Theoretically this approach could be used on incredibly large datasets far too hefty to label by hand. By adjusting the value of K, we could even uncover completely new, more subtle senses of a word.
+
+
+Important disclaimer for replicating reported results:
+------------------------------------------------------
+
+K-Means is a non-deterministic, hill-climbing algorithm that iterates until it converges on a local optimum. Note that this is not necessarily the global optimum, depending on where the centroids were randomly initialized. Therefore, when you run my code, you may not necessarily get exactly the same values. However, if you run the program enough times (probably 3-4) you will get the same results when it converges on the same local optimum that I have reported my accuracy from.
+
+Also note that K-Means, or at least my implementation of it, is fairly slow. I print a '.' at each iteration so you can see that it is making progress, but expect to wait for about 10-15 iterations before the prgram terminates.
