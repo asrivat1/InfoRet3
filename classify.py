@@ -68,6 +68,7 @@ def main():
     processSentence(sentence, vecs, common, currDoc)
 
     # find centroids
+    # replace with findCentroids(vecs, sensenum) for parts 1-3
     (v_profile1, v_profile2) = kmeans(vecs, sensenum)
 
     # evaluate test data
